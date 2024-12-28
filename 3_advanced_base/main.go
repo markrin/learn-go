@@ -85,6 +85,7 @@ func maps() {
 			37.42202, -122.08408,
 		},
 	}
+	println(m2)
 	// or just
 	var m3 = map[string]Vertex{
 		"Bell Labs": {40.68433, -74.39967},
@@ -97,10 +98,39 @@ func maps() {
 	}
 }
 
+// functions could als obe used as values
+func compute(fn func(float64, float64) float64) float64 {
+	return fn(3, 4)
+	// fmt.Println(compute(math.Pow))
+}
+
+// A closure is a function value that references variables from outside its body.
+// The function may access and assign to the referenced variables;
+// in this sense the function is "bound" to the variables.
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum
+	}
+}
+
+func useClosure() {
+	pos, neg := adder(), adder()
+	for i := 0; i < 3; i++ {
+		fmt.Println(
+			pos(i),
+			neg(-2*i),
+		)
+	}
+}
+
 func main() {
 	arrays()
 	dynamicArrays()
 	maps()
+	WordCount("hello   moto moto you are awesome")
+	useClosure()
 }
 
 // ============ assignment 1 (slices) ============
@@ -121,3 +151,22 @@ func Pic(dx, dy int) [][]uint8 {
 // func main() {
 // 	pic.Show(Pic)
 // }
+
+// =========== assignment 2 (wordcount) ==========
+
+func WordCount(s string) map[string]int {
+	res := make(map[string]int)
+	word := ""
+	for i := 0; i < len(s); i++ {
+		if s[i] != ' ' {
+			word += string(s[i])
+		} else {
+			res[word] += 1
+			word = ""
+		}
+	}
+	res[word] += 1
+	delete(res, "")
+	fmt.Println("WordCount:", res)
+	return res
+}
